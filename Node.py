@@ -5,23 +5,22 @@ from autograd.numpy.random import normal
 from autograd.numpy.linalg import norm
 
 
-class ChainNode:
+class Node:
     """
 	This class is the implementation of a single node in a Kalman Filter chain for PDMM
 	It can calculate it's local loss and propogate messages to adjacent nodes
 	"""
 
-    def __init__(self, i, N, E, a):
+    def __init__(self, i, N, f, p, d):
 
         self.i = i
         self.x = normal(0, 1, [N, 1])
-        self.E = E
-        self.a = a
+        self.f = f
         self.Neighbours = []
         self.M = {}
 
-        self.d_T = 1e-4
-        self.p = 1e-5
+        self.d_T = d
+        self.p = p
         self.N_max = 5000
 
     def finalise(self):
@@ -40,7 +39,7 @@ class ChainNode:
             neighbour.new_m_ij = m_ji + (neighbour.c_ij - 2 * dot(neighbour.A_ij, self.x))
 
     def objective(self, x):
-        obj = 0.5 * dot(x.T, dot(self.E, x)) - dot(self.a.T, x)
+        obj = self.f(x)
 
         for neighbour in self.Neighbours:
             m_ji = neighbour.node.get_message(self.i)
