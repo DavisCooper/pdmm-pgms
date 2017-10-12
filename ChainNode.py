@@ -11,7 +11,7 @@ class ChainNode:
 	It can calculate it's local loss and propogate messages to adjacent nodes
 	"""
 
-    def __init__(self, i, N, E, a):
+    def __init__(self, i, N, E, a, p, d, N_max):
 
         self.i = i
         self.x = normal(0, 1, [N, 1])
@@ -20,9 +20,9 @@ class ChainNode:
         self.Neighbours = []
         self.M = {}
 
-        self.d_T = 1e-4
-        self.p = 1e-5
-        self.N_max = 5000
+        self.d_T = d
+        self.p = p
+        self.N_max = N_max
 
     def finalise(self):
         for neighbour in self.Neighbours:
