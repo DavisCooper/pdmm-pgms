@@ -63,6 +63,18 @@ class Node:
             i = i + 1
         print(i, d)
 
+    def descend(self, N):
+        # perform gradient descent on objective
+        obj_grad = grad(self.objective)
+        d = 1
+        i = 0
+        while i < N:
+            g = self.p * obj_grad(self.x)
+            self.x = self.x - g
+            d = norm(g)
+            i = i + 1
+        print(i, d)
+
     def update(self):
 
         self.find_minimum()
