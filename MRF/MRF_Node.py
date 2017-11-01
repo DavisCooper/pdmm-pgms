@@ -39,7 +39,7 @@ class Node:
             neighbour.new_m_ij = m_ji + (neighbour.c_ij - 2 * dot(neighbour.A_ij, self.x))
 
     def objective(self, x):
-        obj = self.f(x)
+        obj = self.f(*x)
 
         for neighbour in self.Neighbours:
             m_ji = neighbour.node.get_message(self.i)
