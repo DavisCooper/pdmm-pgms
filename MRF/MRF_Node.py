@@ -11,7 +11,7 @@ class Node:
 	It can calculate it's local loss and propogate messages to adjacent nodes
 	"""
 
-    def __init__(self, i, N, f, p, d):
+    def __init__(self, i, N, f, p, d, I_c=None):
 
         self.i = i
         self.x = normal(0, 1, [N, 1])
@@ -22,6 +22,9 @@ class Node:
         self.d_T = d
         self.p = p
         self.N_max = 5000
+
+        self.I_c = I_c
+        self.constrain()
 
     def finalise(self):
         for neighbour in self.Neighbours:
@@ -59,6 +62,10 @@ class Node:
         while d > self.d_T and i < self.N_max:
             g = self.p * obj_grad(self.x)
             self.x = self.x - g
+
+            if self.I_c is not None:
+                self.constrain()
+
             d = norm(g)
             i = i + 1
         print(i, d)
@@ -74,6 +81,10 @@ class Node:
             d = norm(g)
             i = i + 1
         print(i, d)
+
+    def constrain(self):
+        for i_c,r in self.I_c.items():
+            self.x[i_c] = np.clip(self.x[i_c],r[0],r[1])
 
     def update(self):
 
